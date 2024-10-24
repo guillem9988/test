@@ -62,44 +62,51 @@
 
         // Función para buscar el producto en Google Sheets
         function buscarProducto(codigo) {
-            // URL del archivo CSV publicado desde Google Sheets
-            const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTRWzcs9tEf31krbWj46_NJ0JfQEiLzmb3pp6EsLOWP9LXnq_gQhdsKrrPqhuJPVU-f9b5YeGi7hG7/pub?output=csv';
+    // URL del archivo CSV publicado desde Google Sheets
+    const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTRWzcs9tEf31krbWj46_NJ0JfQEiLzmb3pp6EsLOWP9LXnq_gQhdsKrrPqhuJPVU-f9b5YeGi7hG7/pub?output=csv';
 
-            fetch(urlCSV)
-                .then(response => response.text())
-                .then(data => {
-                    console.log("Datos obtenidos:", data);  // Verifica que los datos de Google Sheets se están obteniendo
-                    const rows = data.split('\n');
-                    let encontrado = false;
+    fetch(urlCSV)
+        .then(response => response.text())
+        .then(data => {
+            console.log("Datos obtenidos:", data);  // Esto debería mostrar el contenido CSV
 
-                    // Itera sobre las filas del CSV
-                    for (let i = 0; i < rows.length; i++) {
-                        const columnas = rows[i].split(',');
+            const rows = data.split('\n');  // Separa las filas del CSV
+            console.log("Filas del CSV:", rows);  // Mostrar todas las filas obtenidas
+            
+            let encontrado = false;
 
-                        // Si el código de barras coincide, muestra la información del producto
-                        if (columnas[0] === codigo) {
-                            const nombreProducto = columnas[1];
-                            const descripcionProducto = columnas[2];
-                            const precioProducto = columnas[3];
+            // Itera sobre las filas del CSV
+            for (let i = 0; i < rows.length; i++) {
+                const columnas = rows[i].split(',');
+                console.log("Columnas de la fila actual:", columnas);  // Verifica las columnas por fila
 
-                            document.getElementById('product-info').innerHTML = `
-                                <h2>${nombreProducto}</h2>
-                                <p>${descripcionProducto}</p>
-                                <p><strong>Precio:</strong> $${precioProducto}</p>
-                            `;
-                            encontrado = true;
-                            break;
-                        }
-                    }
+                // Si el código de barras coincide, muestra la información del producto
+                if (columnas[0] === codigo) {
+                    const nombreProducto = columnas[1];
+                    const descripcionProducto = columnas[2];
+                    const precioProducto = columnas[3];
 
-                    if (!encontrado) {
-                        document.getElementById('product-info').innerHTML = 'Producto no encontrado.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al obtener los datos:', error);
-                });
-        }
+                    console.log("Producto encontrado:", nombreProducto, descripcionProducto, precioProducto);  // Verifica el producto encontrado
+
+                    document.getElementById('product-info').innerHTML = `
+                        <h2>${nombreProducto}</h2>
+                        <p>${descripcionProducto}</p>
+                        <p><strong>Precio:</strong> $${precioProducto}</p>
+                    `;
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                document.getElementById('product-info').innerHTML = 'Producto no encontrado.';
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+}
+
     </script>
 
 </body>
