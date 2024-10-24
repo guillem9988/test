@@ -36,7 +36,14 @@
                 target: document.querySelector('#scanner-container')  // Donde se mostrará el video
             },
             decoder: {
-                readers: ["ean_reader"]  // Especifica el lector de códigos de barras EAN
+                readers: [
+                    "ean_reader",        // Códigos EAN
+                    "ean_8_reader",      // Códigos EAN de 8 dígitos
+                    "code_128_reader",   // Códigos Code 128
+                    "code_39_reader",    // Códigos Code 39
+                    "upc_reader",        // Códigos UPC
+                    "upc_e_reader"       // Códigos UPC-E
+                ]
             }
         }, function (err) {
             if (err) {
@@ -46,10 +53,10 @@
             Quagga.start();
         });
 
-        // Detecta el código de barras y busca el producto en Google Sheets
+        // Detecta el código de barras
         Quagga.onDetected(function (result) {
             const code = result.codeResult.code;
-            console.log("Código detectado: " + code);
+            console.log("Código detectado: " + code);  // Verifica que el código escaneado se muestra en la consola
             buscarProducto(code);  // Llama a la función para buscar en la hoja de cálculo
         });
 
@@ -61,6 +68,7 @@
             fetch(urlCSV)
                 .then(response => response.text())
                 .then(data => {
+                    console.log("Datos obtenidos:", data);  // Verifica que los datos de Google Sheets se están obteniendo
                     const rows = data.split('\n');
                     let encontrado = false;
 
