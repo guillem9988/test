@@ -2,97 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escaneo de Códigos de Barras</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        #scanner-container {
-            width: 100%;
-            max-width: 500px;
-            margin: auto;
-        }
-        video {
-            width: 100%;
-        }
-    </style>
+    <title>Página de Escaneo de Códigos de Barras</title>
 </head>
 <body>
-
-    <h1>Escanear Código de Barras</h1>
-    <div id="scanner-container"></div>
-    <p id="product-info">Escanea un código para ver la información del producto.</p>
-
-    <script>
-        // Inicializa QuaggaJS
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#scanner-container')  // Donde se mostrará el video
-            },
-            decoder: {
-                readers: ["ean_reader"]  // Especifica el lector de códigos de barras EAN (se puede ajustar según tus necesidades)
-            }
-        }, function (err) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            Quagga.start();
-        });
-
-        // Detecta el código de barras
-        Quagga.onDetected(function (result) {
-            const code = result.codeResult.code;
-            console.log("Código detectado: " + code);
-            buscarProducto(code);  // Llama a la función que buscará el producto en la base de datos
-        });
-
-        // Función para buscar el producto en Google Sheets o una base de datos
-        function buscarProducto(codigo) {
-            // URL del archivo CSV publicado desde Google Sheets
-            const urlCSV = 'TU_ENLACE_CSV_DESDE_GOOGLE_SHEETS';
-
-            fetch(urlCSV)
-                .then(response => response.text())
-                .then(data => {
-                    const rows = data.split('\n');
-                    let encontrado = false;
-
-                    // Itera sobre las filas del CSV
-                    for (let i = 0; i < rows.length; i++) {
-                        const columnas = rows[i].split(',');
-
-                        // Si el código de barras coincide, muestra la información del producto
-                        if (columnas[0] === codigo) {
-                            const nombreProducto = columnas[1];
-                            const descripcionProducto = columnas[2];
-                            const precioProducto = columnas[3];
-
-                            document.getElementById('product-info').innerHTML = `
-                                <h2>${nombreProducto}</h2>
-                                <p>${descripcionProducto}</p>
-                                <p><strong>Precio:</strong> $${precioProducto}</p>
-                            `;
-                            encontrado = true;
-                            break;
-                        }
-                    }
-
-                    if (!encontrado) {
-                        document.getElementById('product-info').innerHTML = 'Producto no encontrado.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al obtener los datos:', error);
-                });
-        }
-    </script>
-
+    <h1>¡Página funcionando!</h1>
+    <p>Aquí irá el contenido de tu página.</p>
 </body>
 </html>
+
