@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escaneo de Códigos de Barras</title>
+    <title>1Escaneo de Códigos de Barras</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
         body {
@@ -61,14 +61,14 @@
         });
 
         // Función para buscar el producto en Google Sheets
-        function buscarProducto(codigo) {
+       function buscarProducto(codigo) {
     // URL del archivo CSV publicado desde Google Sheets
     const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTRWzcs9tEf31krbWj46_NJ0JfQEiLzmb3pp6EsLOWP9LXnq_gQhdsKrrPqhuJPVU-f9b5YeGi7hG7/pub?output=csv';
 
     fetch(urlCSV)
         .then(response => response.text())
         .then(data => {
-            console.log("Datos obtenidos:", data);  // Esto debería mostrar el contenido CSV
+            console.log("Datos obtenidos:", data);  // Verifica que los datos se están obteniendo
 
             const rows = data.split('\n');  // Separa las filas del CSV
             console.log("Filas del CSV:", rows);  // Mostrar todas las filas obtenidas
@@ -77,7 +77,7 @@
 
             // Itera sobre las filas del CSV
             for (let i = 0; i < rows.length; i++) {
-                const columnas = rows[i].split(',');
+                const columnas = rows[i].split(',').map(col => col.trim());  // Limpiamos los espacios en blanco y el \r
                 console.log("Columnas de la fila actual:", columnas);  // Verifica las columnas por fila
 
                 // Si el código de barras coincide, muestra la información del producto
@@ -106,6 +106,7 @@
             console.error('Error al obtener los datos:', error);
         });
 }
+
 
     </script>
 
