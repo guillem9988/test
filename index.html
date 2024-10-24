@@ -28,7 +28,7 @@
     <p id="product-info">Escanea un código para ver la información del producto.</p>
 
     <script>
-        // Inicializa QuaggaJS
+        // Inicializa QuaggaJS para escanear códigos de barras
         Quagga.init({
             inputStream: {
                 name: "Live",
@@ -36,7 +36,7 @@
                 target: document.querySelector('#scanner-container')  // Donde se mostrará el video
             },
             decoder: {
-                readers: ["ean_reader"]  // Especifica el lector de códigos de barras EAN (se puede ajustar según tus necesidades)
+                readers: ["ean_reader"]  // Especifica el lector de códigos de barras EAN
             }
         }, function (err) {
             if (err) {
@@ -46,17 +46,17 @@
             Quagga.start();
         });
 
-        // Detecta el código de barras
+        // Detecta el código de barras y busca el producto en Google Sheets
         Quagga.onDetected(function (result) {
             const code = result.codeResult.code;
             console.log("Código detectado: " + code);
-            buscarProducto(code);  // Llama a la función que buscará el producto en la base de datos
+            buscarProducto(code);  // Llama a la función para buscar en la hoja de cálculo
         });
 
-        // Función para buscar el producto en Google Sheets o una base de datos
+        // Función para buscar el producto en Google Sheets
         function buscarProducto(codigo) {
             // URL del archivo CSV publicado desde Google Sheets
-            const urlCSV = 'TU_ENLACE_CSV_DESDE_GOOGLE_SHEETS';
+            const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTRWzcs9tEf31krbWj46_NJ0JfQEiLzmb3pp6EsLOWP9LXnq_gQhdsKrrPqhuJPVU-f9b5YeGi7hG7/pub?output=csv';
 
             fetch(urlCSV)
                 .then(response => response.text())
