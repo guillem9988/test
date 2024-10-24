@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1Escaneo de Códigos de Barras</title>
+    <title>2Escaneo de Códigos de Barras</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
         body {
@@ -61,7 +61,19 @@
         });
 
         // Función para buscar el producto en Google Sheets
-       function buscarProducto(codigo) {
+       let ultimoCodigo = '';
+let ultimaDeteccion = 0;
+
+function buscarProducto(codigo) {
+    // Evitar múltiples detecciones en poco tiempo
+    const tiempoActual = Date.now();
+    if (codigo === ultimoCodigo && (tiempoActual - ultimaDeteccion < 3000)) {
+        return;  // No hacer nada si es el mismo código detectado en menos de 3 segundos
+    }
+    
+    ultimoCodigo = codigo;
+    ultimaDeteccion = tiempoActual;
+
     // URL del archivo CSV publicado desde Google Sheets
     const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTRWzcs9tEf31krbWj46_NJ0JfQEiLzmb3pp6EsLOWP9LXnq_gQhdsKrrPqhuJPVU-f9b5YeGi7hG7/pub?output=csv';
 
@@ -88,18 +100,17 @@
 
                     console.log("Producto encontrado:", nombreProducto, descripcionProducto, precioProducto);  // Verifica el producto encontrado
 
-                    document.getElementById('product-info').innerHTML = `
-                        <h2>${nombreProducto}</h2>
-                        <p>${descripcionProducto}</p>
-                        <p><strong>Precio:</strong> $${precioProducto}</p>
-                    `;
+                    // Mostrar la información del producto en un popup
+                    alert(`Producto: ${nombreProducto}\nDescripción: ${descripcionProducto}\nPrecio: $${precioProducto}`);
+
                     encontrado = true;
                     break;
                 }
             }
 
             if (!encontrado) {
-                document.getElementById('product-info').innerHTML = 'Producto no encontrado.';
+                // Si el producto no se encuentra, mostrar un mensaje de error
+                alert('Producto no encontrado.');
             }
         })
         .catch(error => {
